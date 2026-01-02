@@ -4,7 +4,7 @@ A simple, privacy-focused web application that creates a 4×6 inch print layout 
 
 ## 🌐 Live Demo
 
-**Try it now: [https://ejohnson-dotnet.github.io/passport-photo-grid/](https://ejohnson-dotnet.github.io/passport-photo-grid/)**
+**Try it now: <a href="https://ejohnson-dotnet.github.io/passport-photo-grid/" target="_blank">https://ejohnson-dotnet.github.io/passport-photo-grid/</a>**
 
 No installation required - works directly in your browser!
 
