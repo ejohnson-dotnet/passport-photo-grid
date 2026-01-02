@@ -1,0 +1,427 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Passport Photo Grid Generator - Create 4×6 Print Layout</title>
+        
+        <!-- Favicon -->
+        <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23667eea;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23764ba2;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23grad)'/%3E%3Crect x='20' y='30' width='60' height='45' rx='5' fill='white'/%3E%3Crect x='35' y='22' width='20' height='8' rx='2' fill='white'/%3E%3Ccircle cx='50' cy='52' r='12' fill='url(%23grad)' stroke='white' stroke-width='2'/%3E%3Ccircle cx='68' cy='38' r='3' fill='%23667eea'/%3E%3C/svg%3E">
+        
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+        <style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 40px 20px;
+    }
+
+    .container {
+        max-width: 1000px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        padding: 40px;
+        margin: 0 auto;
+    }
+
+    @media screen and (min-width: 768px) {
+        .container {
+            padding: 60px;
+        }
+    }
+
+    h1 {
+        color: #2d3748;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .subtitle {
+        color: #718096;
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+    }
+
+    .step-card {
+        background: #f7fafc;
+        border-left: 4px solid #667eea;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+    }
+
+    .step-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: #667eea;
+        color: white;
+        border-radius: 50%;
+        font-weight: bold;
+        margin-right: 12px;
+    }
+
+    .step-title {
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 8px;
+    }
+
+    .upload-section {
+        background: #edf2f7;
+        border: 2px dashed #cbd5e0;
+        border-radius: 12px;
+        padding: 30px;
+        text-align: center;
+        margin: 30px 0;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .upload-section:hover {
+        background: #e2e8f0;
+        border-color: #667eea;
+    }
+
+    .upload-icon {
+        font-size: 48px;
+        color: #667eea;
+        margin-bottom: 15px;
+    }
+
+    .image-upload {
+        display: none;
+    }
+
+    .upload-label {
+        cursor: pointer;
+        margin: 0;
+    }
+
+    .canvas-wrapper {
+        aspect-ratio: 3 / 2;
+        position: relative;
+        margin-top: 30px;
+        border: solid 2px #e2e8f0;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .download-button {
+        padding: 12px 24px;
+        background: #667eea;
+        color: #fff;
+        cursor: pointer;
+        border-radius: 8px;
+        display: none;
+        text-decoration: none;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        border: none;
+        z-index: 2;
+        font-weight: 600;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        transition: all 0.3s;
+    }
+
+    .download-button:hover {
+        background: #5568d3;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+
+    .canvas-placeholder {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+        color: #999;
+        display: none;
+    }
+
+    .canvas-placeholder.active {
+        display: block;
+    }
+
+    .download-button.active {
+        display: table;
+    }
+
+    .warning-label {
+        display: none;
+        padding: 20px;
+        background: #fef3c7;
+        border: 2px solid #fbbf24;
+        border-radius: 12px;
+        color: #92400e;
+        margin: 20px 0;
+    }
+
+    .warning-label.active {
+        display: block;
+    }
+
+    .warning-label strong {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 1.1rem;
+    }
+
+    .info-card {
+        background: #f0f9ff;
+        border-left: 4px solid #3b82f6;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 30px 0;
+    }
+
+    .print-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .print-option {
+        flex: 1;
+        min-width: 150px;
+        padding: 15px;
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        text-align: center;
+        text-decoration: none;
+        color: #2d3748;
+        transition: all 0.3s;
+    }
+
+    .print-option:hover {
+        border-color: #667eea;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        color: #667eea;
+    }
+
+    .section-title {
+        color: #2d3748;
+        font-weight: 600;
+        margin: 40px 0 20px 0;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e2e8f0;
+    }
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <h1 class="text-center"><i class="bi bi-camera"></i> Passport Photo Grid Generator</h1>
+            <p class="subtitle text-center">Create a professional 4×6 inch print layout with six 2×2 inch passport photos</p>
+
+            <div class="step-card">
+                <div class="d-flex align-items-start">
+                    <span class="step-number">1</span>
+                    <div>
+                        <div class="step-title">Create Your Passport Photo</div>
+                        <p class="mb-0">Visit the <a href="https://tsg.phototool.state.gov/photo" target="_blank" class="text-decoration-none">official U.S. passport photo tool</a> to create a compliant 2×2 inch passport photo. Follow their guidelines for proper photo composition, lighting, and background.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="d-flex align-items-start">
+                    <span class="step-number">2</span>
+                    <div>
+                        <div class="step-title">Download Your Photo</div>
+                        <p class="mb-0">Save the 2×2 inch passport photo to your device. Make sure it's a square image (same width and height) for best results.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="d-flex align-items-start">
+                    <span class="step-number">3</span>
+                    <div>
+                        <div class="step-title">Upload and Generate Grid</div>
+                        <p class="mb-0">Upload your 2×2 passport photo below. We'll automatically create a 4×6 inch grid with six copies, ready for printing.</p>
+                    </div>
+                </div>
+            </div>
+
+            <input type="file" class="image-upload" id="fileInput" accept="image/jpeg,image/png" />
+            
+            <div class="upload-section" onclick="document.getElementById('fileInput').click()">
+                <div class="upload-icon"><i class="bi bi-cloud-upload"></i></div>
+                <label class="upload-label">
+                    <h5>Click to Upload Photo</h5>
+                    <p class="text-muted mb-0">or drag and drop your image here</p>
+                    <small class="text-muted">Supports JPEG and PNG formats</small>
+                </label>
+            </div>
+
+            <div class="warning-label">
+                <strong><i class="bi bi-exclamation-triangle"></i> Warning: Photo is not square</strong>
+                <span class="warning-text"></span>
+            </div>
+
+            <div class="canvas-wrapper">
+                <a class="download-button" download><i class="bi bi-download"></i> Download 4×6 Grid</a>
+                <span class="canvas-placeholder active">
+                    <i class="bi bi-image" style="font-size: 48px; color: #cbd5e0;"></i>
+                    <p class="text-muted">Your photo grid will appear here</p>
+                </span>
+                <canvas class="generated-image" width="1800" height="1200"></canvas>
+            </div>
+
+            <div class="info-card">
+                <p class="mb-0"><i class="bi bi-shield-check"></i> <strong>Privacy Protected:</strong> All processing happens in your browser. Your photos are never uploaded to any server or stored anywhere.</p>
+            </div>
+
+            <h2 class="section-title"><i class="bi bi-printer"></i> Printing Your Photos</h2>
+            <p>Order a 4×6 inch print from any of these trusted photo printing services:</p>
+            
+            <div class="print-options">
+                <a href="https://www.shutterfly.com/" target="_blank" class="print-option">
+                    <strong>Shutterfly</strong>
+                </a>
+                <a href="https://www.cvs.com/photo/prints" target="_blank" class="print-option">
+                    <strong>CVS Photo</strong>
+                </a>
+                <a href="https://photo.walgreens.com/store/prints" target="_blank" class="print-option">
+                    <strong>Walgreens</strong>
+                </a>
+                <a href="https://www.ezprints.com/" target="_blank" class="print-option">
+                    <strong>ezprints</strong>
+                </a>
+            </div>
+
+            <h2 class="section-title"><i class="bi bi-scissors"></i> Final Steps</h2>
+            <div class="step-card">
+                <p class="mb-2"><strong>Cut out your photos:</strong> Once you receive your 4×6 print, carefully cut out each 2×2 inch photo using scissors or a paper cutter.</p>
+                <p class="mb-0"><strong>Keep extras:</strong> You'll have six photos total—perfect for multiple applications or as backups!</p>
+            </div>
+        </div>
+
+        <script>
+            window.addEventListener('DOMContentLoaded', (event) => {
+                const canvas = document.querySelector('.generated-image');
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                const fileInput = document.querySelector('.image-upload');
+                const downloadButton = document.querySelector('.download-button');
+                const placeholder = document.querySelector('.canvas-placeholder');
+                const warningLabel = document.querySelector('.warning-label');
+                const warningText = document.querySelector('.warning-text');
+                const uploadSection = document.querySelector('.upload-section');
+
+                let imgObjectUrl;
+
+                // Handle drag and drop
+                uploadSection.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadSection.style.borderColor = '#667eea';
+                    uploadSection.style.background = '#e2e8f0';
+                });
+
+                uploadSection.addEventListener('dragleave', (e) => {
+                    e.preventDefault();
+                    uploadSection.style.borderColor = '#cbd5e0';
+                    uploadSection.style.background = '#edf2f7';
+                });
+
+                uploadSection.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadSection.style.borderColor = '#cbd5e0';
+                    uploadSection.style.background = '#edf2f7';
+                    
+                    const file = e.dataTransfer.files[0];
+                    if (file) {
+                        handleFile(file);
+                    }
+                });
+
+                fileInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        handleFile(file);
+                    }
+                });
+
+                function handleFile(file) {
+                    const fileType = file.type;
+                    if (fileType !== 'image/jpeg' && fileType !== 'image/png') {
+                        alert('Please upload a JPEG or PNG image.');
+                        return;
+                    }
+
+                    if (imgObjectUrl) {
+                        URL.revokeObjectURL(imgObjectUrl);
+                    }
+
+                    imgObjectUrl = URL.createObjectURL(file);
+                    img.onload = drawGrid;
+                    img.src = imgObjectUrl;
+                }
+
+                function drawGrid() {
+                    // Check if image is square
+                    if (img.width !== img.height) {
+                        const aspectRatio = (img.width / img.height).toFixed(2);
+                        warningText.textContent = `Image dimensions: ${img.width}×${img.height} (Aspect ratio: ${aspectRatio}:1). For best results, use a square photo (e.g., 2×2 inches, 600×600 pixels). Non-square photos may appear distorted and could be rejected by passport agencies.`;
+                        warningLabel.classList.add('active');
+                    } else {
+                        warningLabel.classList.remove('active');
+                    }
+
+                    const tileSize = { width: canvas.width / 3, height: canvas.height / 2 };
+                    const scaleFactor = Math.min(tileSize.width / img.width, tileSize.height / img.height);
+                    const scaledWidth = img.width * scaleFactor;
+                    const scaledHeight = img.height * scaleFactor;
+
+                    const offscreenCanvas = document.createElement('canvas');
+                    offscreenCanvas.width = scaledWidth;
+                    offscreenCanvas.height = scaledHeight;
+                    const offscreenCtx = offscreenCanvas.getContext('2d');
+                    offscreenCtx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+
+                    for (let row = 0; row < 2; row++) {
+                        for (let col = 0; col < 3; col++) {
+                            const x = col * tileSize.width + (tileSize.width - scaledWidth) / 2;
+                            const y = row * tileSize.height + (tileSize.height - scaledHeight) / 2;
+                            ctx.drawImage(offscreenCanvas, 0, 0, scaledWidth, scaledHeight, 
+                                col * tileSize.width, 
+                                row * tileSize.height, tileSize.width, tileSize.height);
+                        }
+                    }
+
+                    downloadButton.href = canvas.toDataURL('image/jpeg');
+                    downloadButton.download = 'passport_photo_grid_4x6.jpg';
+                    downloadButton.classList.add('active');
+                    placeholder.classList.remove('active');
+                }
+            });
+        </script>
+
+        <!-- Bootstrap JS Bundle (optional, for enhanced interactions) -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    </body>
+</html>
