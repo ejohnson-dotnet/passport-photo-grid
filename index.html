@@ -30,6 +30,10 @@
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+        
+        <!-- Google AdSense -->
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6473043021111140"
+            crossorigin="anonymous"></script>
 
         <style>
     * {
@@ -43,7 +47,7 @@
     }
 
     .container {
-        max-width: 1000px;
+        max-width: 1400px;
         background: white;
         border-radius: 16px;
         box-shadow: 0 20px 60px rgba(0,0,0,0.3);
@@ -55,6 +59,93 @@
         .container {
             padding: 60px;
         }
+    }
+
+    .content-wrapper {
+        display: flex;
+        gap: 40px;
+        flex-direction: column;
+    }
+
+    @media screen and (min-width: 992px) {
+        .content-wrapper {
+            flex-direction: row;
+        }
+        
+        .main-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .sidebar {
+            width: 300px;
+            flex-shrink: 0;
+        }
+    }
+
+    .ad-container {
+        background: #f7fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        min-height: 250px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: sticky;
+        top: 20px;
+    }
+
+    .ad-label {
+        position: absolute;
+        top: 5px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 10px;
+        color: #a0aec0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .adblock-notice {
+        display: none;
+        background: #fee2e2;
+        border: 2px solid #ef4444;
+        border-radius: 12px;
+        padding: 30px;
+        margin: 30px 0;
+        text-align: center;
+    }
+
+    .adblock-notice.active {
+        display: block;
+    }
+
+    .adblock-notice h3 {
+        color: #991b1b;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+
+    .adblock-notice p {
+        color: #7f1d1d;
+        margin-bottom: 10px;
+    }
+
+    .content-disabled {
+        opacity: 0.5;
+        pointer-events: none;
+        user-select: none;
+    }
+
+    .adblock-bait {
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
     }
 
     h1 {
@@ -254,8 +345,24 @@
 
     <body>
         <div class="container">
+            <!-- Ad-block detection bait -->
+            <div class="adblock-bait" id="adBait">
+                <ins class="adsbygoogle" style="display:inline-block;width:1px;height:1px"></ins>
+            </div>
+
             <h1 class="text-center"><i class="bi bi-camera"></i> Passport Photo Grid Generator</h1>
             <p class="subtitle text-center">Create a professional 4×6 inch print layout with six 2×2 inch passport photos</p>
+
+            <!-- Ad-block Notice -->
+            <div class="adblock-notice" id="adblockNotice">
+                <h3><i class="bi bi-exclamation-triangle"></i> Ad Blocker Detected</h3>
+                <p><strong>This free tool is supported by advertisements.</strong></p>
+                <p>To continue using the Passport Photo Grid Generator, please disable your ad blocker for this site.</p>
+                <p class="mb-0"><small>We respect your privacy - your photos are never uploaded and stay on your device. We only show non-intrusive ads to keep this tool free.</small></p>
+            </div>
+            
+            <div class="content-wrapper">
+                <div class="main-content" id="mainContent">
 
             <div class="step-card">
                 <div class="d-flex align-items-start">
@@ -314,7 +421,7 @@
             </div>
 
             <div class="info-card">
-                <p class="mb-0"><i class="bi bi-shield-check"></i> <strong>Privacy Protected:</strong> All processing happens in your browser. Your photos are never uploaded to any server or stored anywhere.</p>
+                <p class="mb-0"><i class="bi bi-shield-check"></i> <strong>Privacy Protected:</strong> All processing happens in your browser. Your photos are never uploaded to any server or stored anywhere. <a href="privacy-policy.html" class="text-decoration-underline">View Privacy Policy</a></p>
             </div>
 
             <h2 class="section-title"><i class="bi bi-printer"></i> Printing Your Photos</h2>
@@ -340,9 +447,74 @@
                 <p class="mb-2"><strong>Cut out your photos:</strong> Once you receive your 4×6 print, carefully cut out each 2×2 inch photo using scissors or a paper cutter.</p>
                 <p class="mb-0"><strong>Keep extras:</strong> You'll have six photos total—perfect for multiple applications or as backups!</p>
             </div>
+                </div>
+                
+                <!-- Sidebar with Ads -->
+                <aside class="sidebar">
+                    <div class="ad-container">
+                        <span class="ad-label">Advertisement</span>
+                        <!-- Ad Unit 1 - Replace with your actual ad code -->
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-6473043021111140"
+                             data-ad-slot="1234567890"
+                             data-ad-format="auto"
+                             data-full-width-responsive="true"></ins>
+                    </div>
+                    
+                    <div class="ad-container">
+                        <span class="ad-label">Advertisement</span>
+                        <!-- Ad Unit 2 - Replace with your actual ad code -->
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-6473043021111140"
+                             data-ad-slot="0987654321"
+                             data-ad-format="auto"
+                             data-full-width-responsive="true"></ins>
+                    </div>
+                </aside>
+            </div>
+            
+            <!-- Footer -->
+            <footer class="text-center mt-5 pt-4" style="border-top: 2px solid #e2e8f0;">
+                <p class="text-muted mb-2">
+                    <a href="privacy-policy.html" class="text-muted me-3">Privacy Policy</a>
+                    <a href="https://github.com/ejohnson-dotnet/passport-photo-grid" target="_blank" class="text-muted">GitHub</a>
+                </p>
+                <p class="text-muted small mb-0">&copy; 2026 Passport Photo Grid Generator. All rights reserved.</p>
+            </footer>
         </div>
+        
+        <!-- Initialize AdSense ads -->
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
 
         <script>
+            // Ad-block detection
+            function detectAdBlock() {
+                const adBait = document.getElementById('adBait');
+                const adblockNotice = document.getElementById('adblockNotice');
+                const mainContent = document.getElementById('mainContent');
+                
+                // Check if the bait element is hidden or has zero dimensions
+                const isBlocked = adBait.offsetHeight === 0 || 
+                                adBait.offsetWidth === 0 || 
+                                window.getComputedStyle(adBait).display === 'none' ||
+                                typeof adsbygoogle === 'undefined';
+                
+                if (isBlocked) {
+                    adblockNotice.classList.add('active');
+                    mainContent.classList.add('content-disabled');
+                    return true;
+                }
+                return false;
+            }
+            
+            // Run detection after a short delay to allow ad blockers to act
+            setTimeout(detectAdBlock, 100);
+
             window.addEventListener('DOMContentLoaded', (event) => {
                 const canvas = document.querySelector('.generated-image');
                 const ctx = canvas.getContext('2d');
@@ -374,6 +546,10 @@
                     uploadSection.style.borderColor = '#cbd5e0';
                     uploadSection.style.background = '#edf2f7';
                     
+                    if (detectAdBlock()) {
+                        return;
+                    }
+                    
                     const file = e.dataTransfer.files[0];
                     if (file) {
                         handleFile(file);
@@ -381,6 +557,10 @@
                 });
 
                 fileInput.addEventListener('change', (e) => {
+                    if (detectAdBlock()) {
+                        e.preventDefault();
+                        return;
+                    }
                     const file = e.target.files[0];
                     if (file) {
                         handleFile(file);
